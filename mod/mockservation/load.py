@@ -34,7 +34,7 @@ def load(name):
 
     Examples:
         >>> import mockservation as mock
-        >>> img = mock.load('gray_output.raw')
+        >>> img = mock.load('data_file.raw')
     """
     if os.path.isdir(name):
         load_x = load_bundle # have been implemented
@@ -62,15 +62,17 @@ def load_bundle(name):
         A numpy array holding the loaded image(s)
 
     Raises:
-        NameError:    Invalid data bundle name
+        ImportError:    Data bundle does not provide a loader
 
     Examples:
         >>> import mockservation as mock
-        >>> img = mock.load_bundle('model_A')
+        >>> img = mock.load_bundle('data_bundle')
     """
-    path = list(sys.path) # save module path
-    sys.path.insert(0, name)
-    loader = __import__('loader')
-    sys.path[:] = path # restore module path
-
-    return loader.load(name)
+    import importlib.util as iu
+    spec = iu.find_spec(name+'.loader')
+    if spec is None:
+        raise ImportError('data bundle "'+name+'" does not provide a loader')
+    else:
+        loader = iu.module_from_spec(spec)
+        spec.loader.exec_module(loader)
+        return loader.load(name)
