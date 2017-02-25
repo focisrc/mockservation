@@ -68,12 +68,15 @@ def load_bundle(name):
         >>> import mockservation as mock
         >>> img = mock.load_bundle('data_bundle')
     """
-    full_name = name+'/loader.py'
-    if os.path.isfile(full_name):
-        import importlib.util as iu
-        spec = iu.spec_from_file_location('loader', full_name)
-        loader = iu.module_from_spec(spec)
-        spec.loader.exec_module(loader)
-        return loader.load(name)
+    for loader_name in ['loader.py',
+                        '.loader.py',
+                        '.mockservation/loader.py']:
+        full_name = name+'/'+loader_name
+        if os.path.isfile(full_name):
+            import importlib.util as iu
+            spec   = iu.spec_from_file_location('loader', full_name)
+            loader = iu.module_from_spec(spec)
+            spec.loader.exec_module(loader)
+            return loader.load(name)
 
-    raise ImportError('data bundle "'+name+'" does not provide "loader.py"')
+    raise ImportError('data bundle "'+name+'" does not provide any loader')
