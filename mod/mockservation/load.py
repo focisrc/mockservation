@@ -36,7 +36,9 @@ def load(name):
         >>> import mockservation as mock
         >>> img = mock.load('gray_output.raw')
     """
-    if os.path.isfile(name):
+    if os.path.isdir(name):
+        load_x = load_bundle # have been implemented
+    elif os.path.isfile(name):
         _, x = os.path.splitext(name)
         try:
             load_x = globals()['load_'+x.strip('.')]
@@ -44,13 +46,10 @@ def load(name):
             e.args = (e.args[0]+'() is not implemented',
                       'failed to load "'+name+'"')
             raise
-        else:
-            return load_x(name)
+    else:
+        raise NameError('path "'+name+'" is invalid')
 
-    if os.path.isdir(name):
-        return load_bundle(name)
-
-    raise NameError('path "'+name+'" is invalid')
+    return load_x(name)
 
 def load_bundle(name):
     """
