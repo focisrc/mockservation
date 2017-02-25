@@ -20,7 +20,22 @@ import os
 import sys
 
 def load(name):
-    """Load data into mockservation according to extensions"""
+    """
+    Load data into mockservation according to extensions
+
+    Args:
+        name:    Name of the data file/bundle
+
+    Returns:
+        A numpy array holding the loaded image(s)
+
+    Raises:
+        NameError:    Invalid data file/bundle name
+
+    Examples:
+        >>> import mockservation as mock
+        >>> img = mock.load('gray_output.raw')
+    """
     if os.path.isfile(name):
         _, x = os.path.splitext(name)
         try:
@@ -38,7 +53,22 @@ def load(name):
     raise NameError('path "'+name+'" is invalid')
 
 def load_bundle(name):
-    """Load a folder as a data bundle"""
+    """
+    Load a folder as a data bundle
+
+    Args:
+        name:    Name of the data bundle
+
+    Returns:
+        A numpy array holding the loaded image(s)
+
+    Raises:
+        NameError:    Invalid data bundle name
+
+    Examples:
+        >>> import mockservation as mock
+        >>> img = mock.load_bundle('model_A')
+    """
     path = list(sys.path) # save
     sys.path.insert(0, name)
     try:
