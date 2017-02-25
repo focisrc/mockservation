@@ -69,11 +69,11 @@ def load_bundle(name):
         >>> img = mock.load_bundle('data_bundle')
     """
     import importlib.util as iu
-    spec = iu.find_spec(name+'.loader')
+
+    spec = iu.spec_from_file_location('loader', name+'/loader.py')
     if spec is None:
-        raise ImportError('data bundle "'+name+'" does not provide a loader')
+        raise ImportError('data bundle "'+name+'" does not provide "loader.py"')
     else:
         loader = iu.module_from_spec(spec)
         spec.loader.exec_module(loader)
-        abspath = spec.origin[:-len('/loader.py')]
-        return loader.load(abspath)
+        return loader.load(name)
