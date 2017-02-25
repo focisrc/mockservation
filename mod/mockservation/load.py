@@ -16,4 +16,19 @@
 # You should have received a copy of the GNU General Public License
 # along with `mockservation`.  If not, see <http://www.gnu.org/licenses/>.
 
-from .load import *
+import os
+
+def load(name):
+    """Load data into mockservation according to extensions"""
+    if os.path.isfile(name):
+        _, x = os.path.splitext(name)
+        try:
+            load_x = globals()['load_'+x.strip('.')]
+        except Exception as e:
+            e.args = (e.args[0]+'() is not implemented',
+                      'failed to load "'+name+'"')
+            raise
+        else:
+            return load_x(name)
+
+    raise NameError('path "'+name+'" is invalid')
