@@ -68,11 +68,9 @@ def load_bundle(name):
         >>> import mockservation as mock
         >>> img = mock.load_bundle('model_A')
     """
-    path = list(sys.path) # save
+    path = list(sys.path) # save module path
     sys.path.insert(0, name)
-    try:
-        loader = __import__('loader')
-    finally:
-        sys.path[:] = path # restore
+    loader = __import__('loader')
+    sys.path[:] = path # restore module path
 
     return loader.load(name)
