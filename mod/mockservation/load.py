@@ -17,6 +17,7 @@
 # along with `mockservation`.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import sys
 
 def load(name):
     """Load data into mockservation according to extensions"""
@@ -31,4 +32,18 @@ def load(name):
         else:
             return load_x(name)
 
+    if os.path.isdir(name):
+        return load_bundle(name)
+
     raise NameError('path "'+name+'" is invalid')
+
+def load_bundle(name):
+    """Load a folder as a data bundle"""
+    path = list(sys.path) # save
+    sys.path.insert(0, name)
+    try:
+        loader = __import__('loader')
+    finally:
+        sys.path[:] = path # restore
+
+    return loader.load(name)
