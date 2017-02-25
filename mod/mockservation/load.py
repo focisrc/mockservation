@@ -75,4 +75,5 @@ def load_bundle(name):
     else:
         loader = iu.module_from_spec(spec)
         spec.loader.exec_module(loader)
-        return loader.load(name)
+        abspath = spec.origin[:-len('/loader.py')]
+        return loader.load(abspath)
